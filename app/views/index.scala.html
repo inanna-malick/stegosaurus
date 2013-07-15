@@ -1,0 +1,91 @@
+@(message: String)
+
+@main("Stegosaur") {
+
+
+
+	<div class="hero-unit">
+	  <h1>Heading</h1>
+	  <p>Tagline</p>
+	  <p>
+		<a class="btn btn-primary btn-large">
+		  Learn more
+		</a>
+	  </p>
+	</div>
+
+	<div class="span9">
+		<ul class="nav nav-pills">
+		  <li id="encrypt"><a href="#">ENCRYPT</a> </li>
+		  <li id="decrypt"><a href="#" >DECRYPT</a></li>
+		</ul>
+    </div>
+	
+
+	<div id="encrypt-form" class="row">
+		@helper.form(action = routes.Application.encrypt, 'enctype -> "multipart/form-data") {
+			<div class="span3">
+				<textarea rows="3" name="message"></textarea>
+			</div>
+			<div class="span3">
+				<div class="fileupload fileupload-new" data-provides="fileupload">
+				  <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
+				  <div>
+					<span class="btn btn-file btn-primary btn-block btn-large fileupload-new"><input type="file" name="picture" />
+						upload
+					</span>
+					<input type="submit" class="btn fileupload-exists btn-block btn-large btn-primary">
+				  </div>
+				</div>
+			</div>
+		}    
+		
+		<div class="span5">
+			F5 encrypt
+	    </div>
+	</div>
+	
+	<div id="decrypt-form" class="row">
+		<div class="span3">
+		@helper.form(action = routes.Application.decrypt, 'enctype -> "multipart/form-data") {
+			<div class="fileupload fileupload-new" data-provides="fileupload">
+			  <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
+			  <div>
+				<span class="btn btn-file btn-block btn-large btn-primary fileupload-new"><input type="file" name="picture" />
+					upload
+				</span>
+				<input type="submit" class="btn fileupload-exists btn-block btn-large btn-primary">
+			  </div>
+			</div>
+		} 
+		</div>
+		
+		<div class="span5">
+			F5 decrypt
+	    </div>
+    </div>
+	
+	
+	<script>
+		$("#decrypt-form").hide();
+		$("#encrypt-form").show();
+		$("#encrypt").attr("class","active");
+
+	
+		$("#encrypt").click( function(e){
+			$(this).addClass('active');
+			$("#decrypt").removeClass('active');
+			$("#decrypt-form").hide();
+			$("#encrypt-form").show();
+			e.preventDefault();
+		});
+		$("#decrypt").click( function(e){
+			$(this).addClass('active');
+			$("#encrypt").removeClass('active');
+			$("#encrypt-form").hide();
+			$("#decrypt-form").show();
+			e.preventDefault();
+		});
+	</script>
+	
+}
