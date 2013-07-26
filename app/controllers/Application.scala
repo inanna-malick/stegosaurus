@@ -12,52 +12,49 @@ import javax.imageio.ImageIO
 import main.Extract.extract
 import play.api.http.Writeable.wBytes
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.concurrent.Akka 
 import play.api.libs.ws.WS
 import play.api.mvc.Action
 import play.api.mvc.Controller
 
+import play.api.Play.current
+
+
 object Application extends Controller {
 
-  def index = Action {
-    Ok(views.html.index("Your new application is ready."))
-  }
+  val key = "barfoo"
+  
+  def index = Action { Ok(views.html.index("Stegosaurus")) }
 
   def encrypt = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
-      val img = ImageIO.read(picture.ref.file)
+      val original_img = ImageIO.read(picture.ref.file)
       val msg = request.body.dataParts("message").head
-      val key = "barfoo"
-
+	  
+	  
+	  val stegged_img = Akka.future {
+		val img_out = new ByteArrayOutputStream
+		val encoder_widget = time("build with image") {new JpegEncoder(original_img, 50, img_out, "test")} //low quality, high would be 80+
+		time("message and key") {encoder_widget.Compress(new ByteArrayInputStream(msg getBytes), key)}
+		img_out
+	  }
+	  
       Async {
-        
-        val baos = new ByteArrayOutputStream()
-
-        val b = time("build with image") {
-          new JpegEncoder(img, 50, baos, "test")
-        }
-        time("message and key") {
-          b.Compress(new ByteArrayInputStream(msg.getBytes()), key)
-        }
-
-        upload_image(baos.toByteArray()) map { json =>
-          val img_url = json
-          println(img_url)
-          Redirect(tweet_url(img_url))
-        }
+		stegged_img flatMap { img_out =>
+			upload_image(img_out toByteArray) map { img_url =>
+			  Redirect(s"https://twitter.com/intent/tweet?url=$img_url")
+			}
+		}
       }
-
       
       /* TODO: switch to choose between uploading and tweeting or just downloading img
-    
-      val bais = new ByteArrayInputStream(baos.toByteArray())
-      val fileContent: Enumerator[Array[Byte]] = Enumerator.fromStream(bais)
-
+      val bais = new ByteArrayInputStream img_out toByteArray
+      val fileContent: Enumerator[Array[Byte]] = Enumerator fromStream bais
       val fname = picture.filename
 
       SimpleResult(
         header = ResponseHeader(200),
         body = fileContent).as("application/x-download").withHeaders("Content-disposition" -> s"attachment; filename=$fname")
-        
       */
 
     }.getOrElse {
@@ -68,32 +65,26 @@ object Application extends Controller {
 
   def decrypt = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
-      val key = "barfoo"
+      val img_in = picture.ref.file
+      val str_out = new ByteArrayOutputStream
+      extract(new FileInputStream(img_in), img_in.length.toInt, str_out, key)
 
-      val f = picture.ref.file
-      val fis = new FileInputStream(f)
-      val baos = new ByteArrayOutputStream()
-      extract(fis, f.length.toInt, baos, key)
-
-      Ok(baos.toString)
-
+      Ok(str_out toString)
     }.getOrElse {
-      Redirect(routes.Application.index).flashing(
-        "error" -> "Missing file")
-    }
+      Redirect(routes.Application.index).flashing("error" -> "Missing file")}
   }
 
   //upload image to imgur, return json
-  //TODO: better auth, oauth(?)
   def upload_image(file: Array[Byte]): Future[String] = {
     WS.url("https://api.imgur.com/3/image")
-      .withHeaders(("Authorization", "Client-ID dcb5b8c68dc45f4")) //todo: no central client id, anon upload or get user's credentials somehow
-      .post(file).map({ response => println(response.json); ((response.json \ "data") \ "link").toString().replace("\"", "") })
+	.withHeaders(("Authorization", "Client-ID dcb5b8c68dc45f4"))
+	.post(file).map{ response =>
+	 ((response.json \ "data") \ "link").toString() 
+	}
   }
 
-  val upload_image_stub = future { "http://i.imgur.com/P7JPThX.jpg" }
-
-  def tweet_url(img_url: String): String = s"https://twitter.com/intent/tweet?url=$img_url"
+  //mock imgur link to avoid hammering their upload api
+  val upload_image_stub = future { "http://i.imgur.com/8DbaCGd.jpg" }
 
   def time[R](name: String)(block: => R): R = {
     println(s"begin timing $name")
@@ -103,15 +94,6 @@ object Application extends Controller {
     println("Elapsed time: " + (t1 - t0) + "ns")
     result
   }
-
 }
-  
-  
-  
-  
-  
-  
-  
-  
   
   
