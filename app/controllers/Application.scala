@@ -34,14 +34,14 @@ object Application extends Controller {
 	  
 	  val stegged_img = Akka.future {
 		val img_out = new ByteArrayOutputStream
-		val encoder_widget = time("build with image") {new JpegEncoder(original_img, 50, img_out, "test")} //low quality, high would be 80+
+		val encoder_widget = time("build with image") {new JpegEncoder(original_img, 80, img_out, "test")}
 		time("message and key") {encoder_widget.Compress(new ByteArrayInputStream(msg getBytes), key)}
 		img_out
 	  }
 	  
       Async {
 		stegged_img flatMap { img_out =>
-			upload_image(img_out toByteArray) map { img_url =>
+			upload_image(img_out.toByteArray) map { img_url =>
 			  Redirect(s"https://twitter.com/intent/tweet?url=$img_url")
 			}
 		}
@@ -79,7 +79,7 @@ object Application extends Controller {
     WS.url("https://api.imgur.com/3/image")
 	.withHeaders(("Authorization", "Client-ID dcb5b8c68dc45f4"))
 	.post(file).map{ response =>
-	 ((response.json \ "data") \ "link").toString() 
+	 ((response.json \ "data") \ "link").toString.drop(1).dropRight(1) //trim enclosing quotes
 	}
   }
 
