@@ -23,7 +23,7 @@
 	
 
 	<div id="encrypt-form" class="row">
-		@helper.form(action = routes.Application.encrypt, 'enctype -> "multipart/form-data") {
+		@helper.form(action = routes.Application.encrypt_and_tweet, 'enctype -> "multipart/form-data") {
 			<div class="span3">
 				<textarea rows="3" name="message" style="width: 200px; height: 150px;"></textarea>
 			</div>
@@ -34,7 +34,8 @@
 					<span class="btn btn-file btn-primary btn-block btn-large fileupload-new"><input type="file" name="picture" />
 						upload
 					</span>
-					<input type="submit" class="btn fileupload-exists btn-block btn-large btn-primary">
+					<input type="submit" class="btn fileupload-exists btn-block btn-primary" name="submit" formaction=@routes.Application.encrypt_and_download value="download"/>
+					<input type="submit" class="btn fileupload-exists btn-block btn-primary" name="submit" formaction=@routes.Application.encrypt_and_tweet value="tweet"/>
 				  </div>
 				</div>
 			</div>
@@ -54,7 +55,7 @@
 				<span class="btn btn-file btn-block btn-large btn-primary fileupload-new"><input type="file" name="picture" />
 					upload
 				</span>
-				<input type="submit" class="btn fileupload-exists btn-block btn-large btn-primary">
+				<input type="submit" class="btn fileupload-exists btn-block btn-large btn-primary"/>
 			  </div>
 			</div>
 		} 

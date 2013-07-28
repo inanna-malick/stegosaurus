@@ -3,12 +3,14 @@ package controllers
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 
 import scala.concurrent.Future
 import scala.concurrent.future
 
 import james.JpegEncoder
-import javax.imageio.ImageIO
+
 import main.Extract.extract
 import play.api.http.Writeable.wBytes
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -18,26 +20,40 @@ import play.api.mvc.Action
 import play.api.mvc.Controller
 
 import play.api.Play.current
-
+import play.api.mvc.Request
 
 object Application extends Controller {
 
   val key = "barfoo"
   
   def index = Action { Ok(views.html.index("Stegosaurus")) }
-
-  def encrypt = Action(parse.multipartFormData) { request =>
+  
+  def embed(msg: String, img: BufferedImage) = Akka.future {
+		val img_out = new ByteArrayOutputStream
+		val encoder_widget = new JpegEncoder(img, 80, img_out, "test")
+		encoder_widget Compress(new ByteArrayInputStream(msg getBytes), key)
+		img_out
+	  }
+  
+  def encrypt_and_download = TODO
+  
+  def encrypt_and_tweet = Action(parse.multipartFormData) { request =>
     request.body.file("picture").map { picture =>
-      val original_img = ImageIO.read(picture.ref.file)
+      val img: BufferedImage = ImageIO.read(picture.ref.file)
+      val fname = picture.filename
+
       val msg = request.body.dataParts("message").head
 	  
+	  println(request)
 	  
-	  val stegged_img = Akka.future {
+	  val stegged_img = embed(msg, img)
+	  
+	  /*Akka.future {
 		val img_out = new ByteArrayOutputStream
 		val encoder_widget = time("build with image") {new JpegEncoder(original_img, 80, img_out, "test")}
 		time("message and key") {encoder_widget.Compress(new ByteArrayInputStream(msg getBytes), key)}
 		img_out
-	  }
+	  }*/
 	  
       Async {
 		stegged_img flatMap { img_out =>
@@ -50,7 +66,6 @@ object Application extends Controller {
       /* TODO: switch to choose between uploading and tweeting or just downloading img
       val bais = new ByteArrayInputStream img_out toByteArray
       val fileContent: Enumerator[Array[Byte]] = Enumerator fromStream bais
-      val fname = picture.filename
 
       SimpleResult(
         header = ResponseHeader(200),
@@ -86,14 +101,6 @@ object Application extends Controller {
   //mock imgur link to avoid hammering their upload api
   val upload_image_stub = future { "http://i.imgur.com/8DbaCGd.jpg" }
 
-  def time[R](name: String)(block: => R): R = {
-    println(s"begin timing $name")
-    val t0 = System.nanoTime()
-    val result = block
-    val t1 = System.nanoTime()
-    println("Elapsed time: " + (t1 - t0) + "ns")
-    result
-  }
 }
   
   
