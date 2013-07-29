@@ -12,7 +12,7 @@
 	<div class="input-prepend input-append span4">
 		<div class="fileupload fileupload-new " data-provides="fileupload">
 			<span class="add-on" style="height: auto;">
-				<i class="icon-camera-retro icon-3x icon-fixed-width" ></i>
+				<i class="icon-camera-retro icon-3x icon-fixed-width" style="color: #27AE60"></i>
 			</span>
 			
 			<div class="fileupload-preview thumbnail" style="width: 405px; height: 200px;"></div>
@@ -39,7 +39,7 @@
 	<div class="row">
 		<div class="input-prepend input-append span4">
 			<span class="add-on" style="height: auto;">
-				<i class="icon-key icon-3x icon-fixed-width" ></i>
+				<i class="icon-key icon-3x icon-fixed-width"  style="color: #27AE60" ></i>
 			</span>
 			
 			<textarea name="key"  placeholder="key..." rows=4 style="resize: vertical; width: 400px; font-size:28px;"></textarea>
@@ -56,21 +56,20 @@
 
 	<div class="row">
 		<div class="span4 input-prepend input-append">
-			<span class="add-on" style="height: auto;">
-				<i class="icon-pencil icon-flip-horizontal icon-3x icon-fixed-width"></i>			
+			<span class="add-on" style="height: auto; background-color: #2C3E50;">
+				<i class="icon-pencil icon-flip-horizontal icon-3x icon-fixed-width"  style="color: #27AE60; fill: #2C3E50;"></i>			
 			</span>
 			
 			<textarea name="message" form="encrypt" placeholder="message..." rows=8 style="resize:vertical; width: 400px; font-size:28px;"></textarea>
 			
 			<span class="add-on" style="height: auto;">
 				@helper.form(action = routes.Application.encrypt_and_tweet, 'id -> "encrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
-					<button type="submit" class="btn btn-link" name="submit"> 
+					<button type="submit" class="btn btn-link" name="submit" formaction="@routes.Application.encrypt_and_tweet"> 
 						<i class="icon-twitter-sign icon-4x icon-fixed-width"></i><br>
 						tweet
 					</button>
-				}  
-				@helper.form(action = routes.Application.encrypt_and_download, 'id -> "encrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
-					<button type="submit" class="btn btn-link" name="submit">
+					<br>
+					<button type="submit" class="btn btn-link" name="submit" formaction="@routes.Application.encrypt_and_download">
 						<i class="icon-download-alt icon-rotate-270 icon-4x icon-fixed-width"></i><br>
 						download
 					</button>

@@ -101,7 +101,7 @@ object Application extends Controller {
 			val str_out = new ByteArrayOutputStream
 			extract(new FileInputStream(img_in), img_in.length.toInt, str_out, key)
 
-			Ok(str_out toString)
+			Ok(str_out.toString)
 		}.getOrElse {
 			Redirect(routes.Application.index).flashing("error" -> "Missing file")}
 	}
