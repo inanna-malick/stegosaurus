@@ -2,91 +2,81 @@
 
 @main("Stegosaur") {
 
-
-
-	<div class="hero-unit">
-	  <h1>Heading</h1>
-	  <p>Tagline</p>
-	  <p>
-		<a class="btn btn-primary btn-large">
-		  Learn more
-		</a>
-	  </p>
+	<div class="page-header">
+	  <h1>Stegosaur<small> steganographically embed messages in images</small></h1>
 	</div>
-
-	<div class="span9">
-		<ul class="nav nav-pills">
-		  <li id="encrypt"><a href="#">ENCRYPT</a> </li>
-		  <li id="decrypt"><a href="#" >DECRYPT</a></li>
-		</ul>
-    </div>
 	
-
-	<div id="encrypt-form" class="row">
-		@helper.form(action = routes.Application.encrypt_and_tweet, 'enctype -> "multipart/form-data") {
-			<div class="span3">
-				<textarea rows="3" name="message" style="width: 200px; height: 150px;"></textarea>
-			</div>
-			<div class="span3">
-				<div class="fileupload fileupload-new" data-provides="fileupload">
-				  <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
-				  <div>
-					<span class="btn btn-file btn-primary btn-block btn-large fileupload-new"><input type="file" name="picture" />
-						upload
+		
+	<div class="row">
+	
+	<div class="input-prepend input-append span4">
+		<div class="fileupload fileupload-new " data-provides="fileupload">
+			<span class="add-on" style="height: auto;">
+				<i class="icon-camera-retro icon-3x icon-fixed-width" ></i>
+			</span>
+			
+			<div class="fileupload-preview thumbnail" style="width: 405px; height: 200px;"></div>
+			
+			 <span class="add-on" style="height: auto;">
+				  <div class="btn-group btn-group-vertical">
+					<span class="btn btn-file btn-link">
+						<i class="icon-upload-alt icon-4x icon-fixed-width icon-rotate-270"></i><br> Upload
+						<input type="file"  name="picture" form="encrypt"/>
 					</span>
-					<input type="submit" class="btn fileupload-exists btn-block btn-primary" name="submit" formaction=@routes.Application.encrypt_and_download value="download"/>
-					<input type="submit" class="btn fileupload-exists btn-block btn-primary" name="submit" formaction=@routes.Application.encrypt_and_tweet value="tweet"/>
+					<a href="#" class="btn fileupload-exists btn-link" data-dismiss="fileupload">
+						<i class="icon-fire  icon-4x icon-fixed-width"></i><br> Remove
+					</a>
+					<span class="btn fileupload-new btn-link disabled">
+						<i class="icon-fire  icon-4x icon-fixed-width"></i><br> Remove
+					</a>
 				  </div>
-				</div>
-			</div>
-		}    
-		
-		<div class="span5">
-			F5 encrypt
-	    </div>
-	</div>
+			  </span>
+			</div>	
+		</div>	
+	</div>	
 	
-	<div id="decrypt-form" class="row">
-		<div class="span3">
-		@helper.form(action = routes.Application.decrypt, 'enctype -> "multipart/form-data") {
-			<div class="fileupload fileupload-new" data-provides="fileupload">
-			  <div class="fileupload-preview thumbnail" style="width: 200px; height: 150px;"></div>
-			  <div>
-				<span class="btn btn-file btn-block btn-large btn-primary fileupload-new"><input type="file" name="picture" />
-					upload
-				</span>
-				<input type="submit" class="btn fileupload-exists btn-block btn-large btn-primary"/>
-			  </div>
-			</div>
-		} 
-		</div>
-		
-		<div class="span5">
-			F5 decrypt
-	    </div>
-    </div>
-	
-	
-	<script>
-		$("#decrypt-form").hide();
-		$("#encrypt-form").show();
-		$("#encrypt").attr("class","active");
 
-	
-		$("#encrypt").click( function(e){
-			$(this).addClass('active');
-			$("#decrypt").removeClass('active');
-			$("#decrypt-form").hide();
-			$("#encrypt-form").show();
-			e.preventDefault();
-		});
-		$("#decrypt").click( function(e){
-			$(this).addClass('active');
-			$("#encrypt").removeClass('active');
-			$("#encrypt-form").hide();
-			$("#decrypt-form").show();
-			e.preventDefault();
-		});
-	</script>
+	<div class="row">
+		<div class="input-prepend input-append span4">
+			<span class="add-on" style="height: auto;">
+				<i class="icon-key icon-3x icon-fixed-width" ></i>
+			</span>
+			
+			<textarea name="key"  placeholder="key..." rows=4 style="resize: vertical; width: 400px; font-size:28px;"></textarea>
+			
+			<span class="add-on" style="height: auto;">
+ 				@helper.form(action = routes.Application.decrypt, 'name -> "decrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
+					<button value="extract" type="extract" class="btn btn-link"> 
+						<i class="icon-random icon-4x icon-fixed-width" ></i>
+					</button>
+				}
+			</span>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="span4 input-prepend input-append">
+			<span class="add-on" style="height: auto;">
+				<i class="icon-pencil icon-flip-horizontal icon-3x icon-fixed-width"></i>			
+			</span>
+			
+			<textarea name="message" form="encrypt" placeholder="message..." rows=8 style="resize:vertical; width: 400px; font-size:28px;"></textarea>
+			
+			<span class="add-on" style="height: auto;">
+				@helper.form(action = routes.Application.encrypt_and_tweet, 'id -> "encrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
+					<button type="submit" class="btn btn-link" name="submit"> 
+						<i class="icon-twitter-sign icon-4x icon-fixed-width"></i><br>
+						tweet
+					</button>
+				}  
+				@helper.form(action = routes.Application.encrypt_and_download, 'id -> "encrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
+					<button type="submit" class="btn btn-link" name="submit">
+						<i class="icon-download-alt icon-rotate-270 icon-4x icon-fixed-width"></i><br>
+						download
+					</button>
+				}  
+			</span>
+		</div>
+	</div>
 	
 }
