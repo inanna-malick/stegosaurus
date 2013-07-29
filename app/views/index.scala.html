@@ -11,13 +11,17 @@
 	
 	<div class="input-prepend input-append span4">
 		<div class="fileupload fileupload-new " data-provides="fileupload">
-			<span class="add-on" >
-				<i class="icon-camera-retro icon-3x icon-fixed-width" style="color: #27AE60"></i>
+			<span class="add-on left-sidebar" >
+				<i class="icon-camera-retro icon-3x icon-fixed-width"></i>
+			</span>
+
+			<span >
+				=>
 			</span>
 			
 			<div class="fileupload-preview thumbnail" style="width: 405px; height: 200px;"></div>
 			
-			 <span class="add-on" >
+			 <span class="add-on right-sidebar" >
 				  <div class="btn-group btn-group-vertical">
 					<span class="btn btn-file btn-link">
 						<i class="icon-upload-alt icon-4x icon-fixed-width icon-rotate-270"></i><br> Upload
@@ -26,9 +30,9 @@
 					<a href="#" class="btn fileupload-exists btn-link" data-dismiss="fileupload">
 						<i class="icon-fire  icon-4x icon-fixed-width"></i><br> Remove
 					</a>
-					<span class="btn fileupload-new btn-link disabled">
+					<span class="btn fileupload-new btn-link" style="opacity:0.4;filter:alpha(opacity=40);">
 						<i class="icon-fire  icon-4x icon-fixed-width"></i><br> Remove
-					</a>
+					</span>
 				  </div>
 			  </span>
 			</div>	
@@ -38,13 +42,13 @@
 
 	<div class="row">
 		<div class="input-prepend input-append span4">
-			<span class="add-on" >
-				<i class="icon-key icon-3x icon-fixed-width"  style="color: #27AE60" ></i>
+			<span class="add-on left-sidebar" >
+				<i class="icon-key icon-3x icon-fixed-width" ></i>
 			</span>
 			
 			<textarea name="key"  placeholder="key..." rows=4 style="resize: vertical; width: 400px; font-size:28px;"></textarea>
 			
-			<span class="add-on" >
+			<span class="add-on right-sidebar" >
  				@helper.form(action = routes.Application.decrypt, 'name -> "decrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
 					<button value="extract" type="extract" class="btn btn-link"> 
 						<i class="icon-random icon-4x icon-fixed-width" ></i>
@@ -56,13 +60,13 @@
 
 	<div class="row">
 		<div class="span4 input-prepend input-append">
-			<span class="add-on">
-				<i class="icon-pencil icon-flip-horizontal icon-3x icon-fixed-width"  style="color: #27AE60; fill: #2C3E50;"></i>			
+			<span class="add-on left-sidebar">
+				<i class="icon-file-text icon-flip-horizontal icon-3x icon-fixed-width" ></i>			
 			</span>
 			
 			<textarea name="message" form="encrypt" placeholder="message..." rows=8 style="resize:vertical; width: 400px; font-size:28px;"></textarea>
 			
-			<span class="add-on" >
+			<span class="add-on right-sidebar" >
 				@helper.form(action = routes.Application.encrypt_and_tweet, 'id -> "encrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
 					<button type="submit" class="btn btn-link" name="submit" formaction="@routes.Application.encrypt_and_tweet"> 
 						<i class="icon-twitter-sign icon-4x icon-fixed-width"></i><br>
