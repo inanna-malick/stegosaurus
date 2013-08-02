@@ -3,19 +3,9 @@
 
 .add-on{height: auto !important;}
 
-h1 {color: #27AE60 !important;}
+h1 {color: #2980B9 !important;}
 
-/*
-.btn-link i {color: #27AE60; text-shadow:  0 0 0 !important; background-color: #2C3E50 !important; }
-.btn-link  {color: #27AE60; text-shadow:  0 0 0 !important; background-color: #2C3E50 !important; }
-
-span.right-sidebar  span{background-color: #2C3E50 !important; }
-span.right-sidebar  * { text-shadow:  0 0 0 !important}
-
-
-span.left-sidebar {background-color: #2C3E50 !important; border: 2px solid #27AE60 !important;}
-
-*/
+.btn-primary  {color: #2980B9; text-shadow:  0 0 0 !important; }
 
 .btn:hover  *{text-decoration: none !important;}
 
@@ -23,14 +13,27 @@ span.left-sidebar {background-color: #2C3E50 !important; border: 2px solid #27AE
 
 i {text-shadow:  0 0 0 !important; }
 
-span.left-sidebar {background-color: #2C3E50 !important; border: 2px double #27AE60 !important; margin-right: 5px !important;}
-span.left-sidebar i {color: #27AE60 !important;}
+span.left-sidebar {border: 2px double #2980B9 !important; margin-right: 5px !important;}
+span.left-sidebar i {color: #2980B9 !important;}
 
 
 
-span.right-sidebar  {background-color: #2C3E50 !important; border: 2px double #27AE60 !important; margin-left: 5px !important;}
+.right-sidebar  {border: 2px double #2980B9 !important; margin-left: 5px !important;}
+
+.fileupload-preview , textarea{border: 2px double #2980B9 !important;} 
 
 
-body {background-color: #34495E !important;}
+/* placeholder text*/
 
-.fileupload-preview , textarea{background-color: #2C3E50 !important; border: 2px double #27AE60 !important;} 
+textarea::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #2980B9;
+}
+textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #2980B9;
+}
+textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #2980B9;
+}
+textarea:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #2980B9;
+}
