@@ -3,40 +3,40 @@
 @main("Stegosaur") {
 
 	<div class="page-header">
-	  <h1>Stegosaur<small> steganographically embed messages in images</small></h1>
+	<h1>Stegosaur<small> steganographically embed messages in images</small></h1>
 	</div>
 	
 		
 	<div class="row">
 	
-	<div class="input-prepend input-append span4">
-		<div class="fileupload fileupload-new " data-provides="fileupload">
-			<span class="add-on left-sidebar" >
-				<i class="icon-camera-retro icon-3x icon-fixed-width"></i>
-			</span>
-
-			<span >
-				=>
-			</span>
+		<div class="input-prepend input-append span4">
+			<div class="fileupload fileupload-new " data-provides="fileupload">
+				<span class="add-on left-sidebar" >
+					<i class="icon-picture icon-3x icon-fixed-width"></i>
+				</span>
 			
-			<div class="fileupload-preview thumbnail" style="width: 405px; height: 200px;"></div>
+				<div class="fileupload-preview thumbnail" style="width: 405px; height: 200px;"></div>
 			
-			 <span class="add-on right-sidebar" >
-				  <div class="btn-group btn-group-vertical">
-					<span class="btn btn-file btn-link">
-						<i class="icon-upload-alt icon-4x icon-fixed-width icon-rotate-270"></i><br> Upload
-						<input type="file"  name="picture" form="encrypt"/>
-					</span>
-					<a href="#" class="btn fileupload-exists btn-link" data-dismiss="fileupload">
-						<i class="icon-fire  icon-4x icon-fixed-width"></i><br> Remove
-					</a>
-					<span class="btn fileupload-new btn-link" style="opacity:0.4;filter:alpha(opacity=40);">
-						<i class="icon-fire  icon-4x icon-fixed-width"></i><br> Remove
-					</span>
-				  </div>
-			  </span>
+				<span class="add-on right-sidebar" >
+					<div class="btn-group btn-group-vertical">
+						<span class="btn btn-file btn-link">
+							<i class="icon-upload-alt icon-4x icon-fixed-width icon-rotate-270"></i>
+							<br> Upload
+							<input type="file"  name="picture" form="encrypt"/>
+						</span>
+						<a href="#" class="btn fileupload-exists btn-link" data-dismiss="fileupload">
+							<i class="icon-fire  icon-4x icon-fixed-width"></i>
+							<br> Remove
+						</a>
+						<span class="btn fileupload-new btn-link" style="opacity:0.4;filter:alpha(opacity=40);">
+							<i class="icon-fire  icon-4x icon-fixed-width"></i>
+							<br> Remove
+						</span>
+					</div>
+				</span>
 			</div>	
 		</div>	
+		
 	</div>	
 	
 
@@ -46,13 +46,14 @@
 				<i class="icon-key icon-3x icon-fixed-width" ></i>
 			</span>
 			
-			<textarea name="key"  placeholder="key..." rows=4 style="resize: vertical; width: 400px; font-size:28px;"></textarea>
+			<textarea name="key"  placeholder="key..." rows="4" style="resize: vertical; width: 400px; font-size:28px;"></textarea>
 			
 			<span class="add-on right-sidebar" >
- 				@helper.form(action = routes.Application.decrypt, 'name -> "decrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
-					<button value="extract" type="extract" class="btn btn-link"> 
-						<i class="icon-random icon-4x icon-fixed-width" ></i>
-					</button>
+ 				@helper.form(action = routes.Application.decrypt, 
+					'name -> "decrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
+						<button value="extract" type="extract" class="btn btn-link"> 
+							<i class="icon-double-angle-right icon-4x icon-fixed-width" ></i>
+						</button>
 				}
 			</span>
 		</div>
@@ -67,15 +68,16 @@
 			<textarea name="message" form="encrypt" placeholder="message..." rows=8 style="resize:vertical; width: 400px; font-size:28px;"></textarea>
 			
 			<span class="add-on right-sidebar" >
-				@helper.form(action = routes.Application.encrypt_and_tweet, 'id -> "encrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
+				@helper.form(action = routes.Application.encrypt_and_tweet, 
+					'id -> "encrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
 					<button type="submit" class="btn btn-link" name="submit" formaction="@routes.Application.encrypt_and_tweet"> 
-						<i class="icon-twitter-sign icon-4x icon-fixed-width"></i><br>
-						tweet
+						<i class="icon-twitter-sign icon-4x icon-fixed-width"></i>
+						<br> Tweet
 					</button>
 					<br>
 					<button type="submit" class="btn btn-link" name="submit" formaction="@routes.Application.encrypt_and_download">
-						<i class="icon-download-alt icon-rotate-270 icon-4x icon-fixed-width"></i><br>
-						download
+						<i class="icon-download-alt icon-rotate-270 icon-4x icon-fixed-width"></i>
+						<br> Download
 					</button>
 				}  
 			</span>
