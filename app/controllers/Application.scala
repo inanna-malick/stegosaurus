@@ -49,79 +49,58 @@ object Application extends Controller {
 			img_out
 		}
 	
-	def encrypt_and_download = Action(parse.multipartFormData) { request =>
-		val result = for {
-			img_data <- request.body.file("picture").toSuccess(e = "fuck, no picture")
-			msg <- request.body.dataParts.get("message")
-						.map(_.head).filter(_ != "").toSuccess(e = "fuck, no msg")
-			key <- request.body.dataParts.get("key")
-						.map(_.head).filter(_ != "").toSuccess(e = "fuck, no key")
-			img <- ImageIO.read(img_data.ref.file).success
-			fname <- img_data.filename.success
-			download_future <- (for {
-				stegged_img <- embed(msg, key, img)
-			} yield {
-				val bais = new ByteArrayInputStream(stegged_img.toByteArray)
-				val data: Enumerator[Array[Byte]] = Enumerator fromStream bais
-				SimpleResult(
-					header = ResponseHeader(200),
-					body = data)
-				.as("application/x-download")
-				.withHeaders("Content-disposition" -> s"attachment; filename=$fname")
-			}).success
-		} yield download_future
-
-		//TODO: non-awful error msg
-		val onError = (error: String) => future{ Ok(<h1>error => {error}</h1>).as("text/html") } 
-
-		Async {
-			result.fold(
-				errorResponse,
-				response => response)
+	def encrypt_and_download = Action(parse.multipartFormData) {request => respond{
+			for {
+				img_data <- request.body.file("picture").toSuccess(e = "fuck, no picture")
+				msg <- request.body.dataParts.get("message")
+							.map(_.head).filter(_ != "").toSuccess(e = "fuck, no msg")
+				key <- request.body.dataParts.get("key")
+							.map(_.head).filter(_ != "").toSuccess(e = "fuck, no key")
+				img <- ImageIO.read(img_data.ref.file).success
+				fname <- img_data.filename.success
+				download_future <- (for {
+					stegged_img <- embed(msg, key, img)
+				} yield {
+					val bais = new ByteArrayInputStream(stegged_img.toByteArray)
+					val data: Enumerator[Array[Byte]] = Enumerator fromStream bais
+					SimpleResult(
+						header = ResponseHeader(200),
+						body = data)
+					.as("application/x-download")
+					.withHeaders("Content-disposition" -> s"attachment; filename=$fname")
+				}).success
+			} yield download_future
 		}
 	}
 	
-	def encrypt_and_tweet = Action(parse.multipartFormData) { request =>
-		val result = for {
-			img_data <- request.body.file("picture").toSuccess(e = "fuck, no picture")
-			msg <- request.body.dataParts.get("message")
-						.map(_.head).filter(_ != "").toSuccess(e = "fuck, no msg")
-			key <- request.body.dataParts.get("key")
-						.map(_.head).filter(_ != "").toSuccess(e = "fuck, no key")
-			img <- ImageIO.read(img_data.ref.file).success
-			fname <- img_data.filename.success
-			tweet_future <- (for {
-				stegged_img <- embed(msg, key, img)
-				img_url <- upload_image(stegged_img.toByteArray)
-			} yield Redirect(s"https://twitter.com/intent/tweet?url=$img_url")).success
-		} yield tweet_future
-
-		//TODO: non-awful error msg
-		val onError = (error: String) => future{ Ok(<h1>error => {error}</h1>).as("text/html") } 
-
-		Async {
-			result.fold(
-				errorResponse,
-				response => response)
+	def encrypt_and_tweet = Action(parse.multipartFormData) {request => respond{
+			for {
+				img_data <- request.body.file("picture").toSuccess(e = "fuck, no picture")
+				msg <- request.body.dataParts.get("message")
+							.map(_.head).filter(_ != "").toSuccess(e = "fuck, no msg")
+				key <- request.body.dataParts.get("key")
+							.map(_.head).filter(_ != "").toSuccess(e = "fuck, no key")
+				img <- ImageIO.read(img_data.ref.file).success
+				fname <- img_data.filename.success
+				tweet_future <- (for {
+					stegged_img <- embed(msg, key, img)
+					img_url <- upload_image(stegged_img.toByteArray)
+				} yield Redirect(s"https://twitter.com/intent/tweet?url=$img_url")).success
+			} yield tweet_future
 		}
 	}
 	
 
-	def decrypt = Action(parse.multipartFormData) { request =>
-		val result = for {
-			img_data <- request.body.file("picture").toSuccess(e = "fuck, no picture")
-			key <- request.body.dataParts.get("key")
-						.map(_.head).filter(_ != "").toSuccess(e = "fuck, no key")
-			img <- img_data.ref.file.success
-			msg_future <- (for { 
-					msg <- extract_msg(key, img)
-				} yield Ok(<h1>message => {msg}</h1>).as("text/html")).success
-		} yield msg_future
-		
-		Async {
-			result.fold(
-				errorResponse,
-				response => response)		
+	def decrypt = Action(parse.multipartFormData) {request => respond{
+			for {
+				img_data <- request.body.file("picture").toSuccess(e = "fuck, no picture")
+				key <- request.body.dataParts.get("key")
+							.map(_.head).filter(_ != "").toSuccess(e = "fuck, no key")
+				img <- img_data.ref.file.success
+				msg_future <- (for { 
+						msg <- extract_msg(key, img)
+					} yield Ok(<h1>message => {msg}</h1>).as("text/html")).success
+			} yield msg_future
 		}
 	}
 
@@ -131,13 +110,18 @@ object Application extends Controller {
 	 * URL-validating return type
 	 */
 	def upload_image(file: Array[Byte]): Future[String] = {
-			WS.url("https://api.imgur.com/3/image")
-			.withHeaders(("Authorization", "Client-ID dcb5b8c68dc45f4"))
-			.post(file).map{ response =>
-			 ((response.json \ "data") \ "link").toString.drop(1).dropRight(1) //trim enclosing quotes
-	}
-	}
+				WS.url("https://api.imgur.com/3/image")
+				.withHeaders(("Authorization", "Client-ID dcb5b8c68dc45f4"))
+				.post(file).map{ response =>
+				 ((response.json \ "data") \ "link").toString.drop(1).dropRight(1) //trim enclosing quotes
+			}
+		}
 	
+	val respond = (result: Validation[String, Future[Result]]) => Async {result.fold(errorResponse, response => response)}
+	
+	/**
+	 * Build a (minimal) error => X response
+	 */
 	val errorResponse = (error: String) => future{ Ok(<h1>error => {error}</h1>).as("text/html") }
 }
 	
