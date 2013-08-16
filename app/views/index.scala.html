@@ -1,77 +1,26 @@
 @(message: String)
 
 @main("Stegosaur") {
-
-	<div class="page-header">
-	<h1>Stegosaur<small> steganographically embed messages in images.<br>Slightly inconvenience the NSA.</small></h1>
-	</div>
-	
-		
 	<div class="row">
-		<div class="input-prepend input-append span4">
-			<div class="fileupload fileupload-new " data-provides="fileupload">
-				<span class="add-on left-sidebar" >
-					<i class="icon-picture icon-3x icon-fixed-width"></i>
-				</span>
-			
-				<div class="fileupload-preview thumbnail" style="width: 300px; height: 250px; box-sizing: border-box;">
-					<img src="http://www.placehold.it/300x250/FFFFFF/2980B9&text=first%2C+upload+an+image" />
-				</div>
-			
-				<div class="add-on right-sidebar btn-group btn-group-vertical" >
-						<span class="btn btn-file btn-primary">
-							<i class="icon-upload-alt icon-3x icon-fixed-width icon-rotate-270"></i>
-							<br> Upload 
-							<input type="file"  name="picture" form="encrypt" required/>								
-						</span>
-						<a href="#" class="btn fileupload-exists btn-primary" data-dismiss="fileupload">
-							<i class="icon-fire  icon-3x icon-fixed-width"></i>
-							<br> Remove
-						</a>
-						<span class="btn fileupload-new btn-primary" style="opacity:0.4;filter:alpha(opacity=40);">
-							<i class="icon-fire  icon-3x icon-fixed-width"></i>
-							<br> Remove
-						</span>
-				</div>
-			</div>	
-		</div>	
-	</div>	
-	
-
-	<div class="row">
-		<div class="input-prepend input-append span4">
-			<span class="add-on left-sidebar" >
-				<i class="icon-key icon-3x icon-fixed-width" ></i>
-			</span>
-			
-			<textarea name="key" form="encrypt" placeholder="select a key" rows="2" style="resize: vertical; width: 300px; font-size:28px; box-sizing: border-box;" required></textarea>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="span4 input-prepend input-append">
-			<span class="add-on left-sidebar">
-				<i class="icon-file-text icon-flip-horizontal icon-3x icon-fixed-width" ></i>			
-			</span>
-			
-			<textarea name="message" form="encrypt" placeholder="add a message" rows=8 style="resize:vertical; width: 300px; font-size:28px; box-sizing: border-box;" required></textarea>
-			
-			<span class="add-on right-sidebar" >
-				@helper.form(action = routes.Application.encrypt_and_tweet, 
-					'id -> "encrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
-					<button type="submit" class="btn btn-primary" name="submit" formaction="@routes.Application.encrypt_and_tweet"> 
-						<i class="icon-twitter-sign icon-3x icon-fixed-width"></i>
-						<br> Tweet
-					</button>
-					<br>
-					<button type="submit" class="btn btn-primary" name="submit" formaction="@routes.Application.encrypt_and_download">
-						<i class="icon-download-alt icon-rotate-270 icon-3x icon-fixed-width"></i>
-						<br> Download
-					</button>
-				}  
-			</span>
+		<div class="header">
+		<div class="col-lg-8">
+			<h1>
+			Stegosaur
+			<br>
+			<small> 
+				steganographically embed messages in images.<br>
+				Slightly inconvenience the NSA.
+			</small>
+			</h1>
+			</div>
 		</div>
 	</div>
 	
+	<div class="row">
+		<div class="col-lg-4">
+			@embed()
 
+			@extract()
+		</div>
+	</div>
 }

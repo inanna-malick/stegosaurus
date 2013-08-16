@@ -1,0 +1,33 @@
+@()
+<div class="row">
+<h2>Embed
+<br><small> a message in an image.</small></h2>
+</div>	
+
+<div class="row">
+	<input type="file"  name="picture" form="encrypt" class="btn btn-default btn-lg" />					
+
+	<textarea name="message" form="encrypt" placeholder="add a message" rows="3" style="width: 100%"></textarea>
+
+	<div class="row">
+	<div class="col-lg-6" style="width: 100%">
+		<div class="input-group">
+			<textarea name="key" form="encrypt" placeholder="select a key" rows="2" class="form-control"></textarea>
+			
+			<span class="input-group-btn">
+			@helper.form(action = routes.Application.encrypt_and_tweet, 
+				'id -> "encrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
+				<div class="btn-group-vertical btn-group-lg">
+					<button type="submit" class="btn btn-default" name="submit" formaction="@routes.Application.encrypt_and_tweet"> 
+						Tweet
+					</button>
+					<button type="submit" class="btn btn-default" name="submit" formaction="@routes.Application.encrypt_and_download">
+						Download
+					</button>
+				</div>
+			}
+			</span>
+		</div>	<!-- /input-group -->	
+	</div>	
+	</div>	
+</div>	

@@ -1,0 +1,23 @@
+@()
+<div class="row">
+<h2>Extract<small> a message from an image.</small></h2>
+</div>	
+
+<div class="row">
+	<input type="file"  name="picture" form="decrypt" class="btn btn-default btn-lg" required/>								
+
+	<div class="input-group">
+		<textarea name="key" form="decrypt" placeholder="select a key" rows="2" class="form-control" required></textarea>
+		
+		<span class="input-group-btn">
+		@helper.form(action = routes.Application.decrypt, 
+			'id -> "decrypt", 'enctype -> "multipart/form-data", 'style -> "margin: 0 0 0;") {
+			<button type="submit" class="btn btn-default btn-lg" name="submit">
+				Extract
+			</button>
+		}
+		</span>
+	</div>	<!-- /input-group -->
+</div>	
+
+
