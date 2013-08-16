@@ -1,5 +1,8 @@
 package controllers
 
+import scalaz._
+import Scalaz._
+
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
@@ -42,7 +45,7 @@ object Application extends Controller {
 			val img: BufferedImage = ImageIO.read(picture.ref.file)
 			val fname = picture.filename
 
-			val msg = request.body.dataParts("message").head
+			val msg = request.body.dataParts("message").head //should be an option, holding off until I figure out monad transformers
 			
 			
 			val stegged_img = embed(msg, img)
@@ -62,38 +65,24 @@ object Application extends Controller {
 		}
 	}
 	
-	
 	def encrypt_and_tweet = Action(parse.multipartFormData) { request =>
-		request.body.file("picture").map { picture =>
-			val img: BufferedImage = ImageIO.read(picture.ref.file)
-			val fname = picture.filename
-
-			val msg = request.body.dataParts("message").head
+			//nested for comprehensions make me sad.
+			val result = for {
+				img_data <- request.body.file("picture")
+				img <- ImageIO.read(img_data.ref.file).some
+				fname <- img_data.filename.some
+				msg <- request.body.dataParts.get("message").map(_.head)
+				tweet_future <- (for {
+					stegged_img <- embed(msg, img)
+					img_url <- upload_image(stegged_img.toByteArray)
+				} yield Redirect(s"https://twitter.com/intent/tweet?url=$img_url")).some
+			} yield tweet_future
 			
-			
-			val stegged_img = embed(msg, img)
-			
-			Async {
-				stegged_img flatMap { img_out =>
-					upload_image(img_out.toByteArray) map { img_url =>
-						Redirect(s"https://twitter.com/intent/tweet?url=$img_url")
-					}
-				}
+			Async{
+				result.getOrElse(future{Redirect(routes.Application.index).flashing("error" -> "Missing file")})
 			}
-			
-			/* TODO: switch to choose between uploading and tweeting or just downloading img
-			val bais = new ByteArrayInputStream img_out toByteArray
-			val fileContent: Enumerator[Array[Byte]] = Enumerator fromStream bais
-
-			SimpleResult(
-				header = ResponseHeader(200),
-				body = fileContent).as("application/x-download").withHeaders("Content-disposition" -> s"attachment; filename=$fname")
-			*/
-
-		}.getOrElse {
-			Redirect(routes.Application.index).flashing("error" -> "Missing file")
-		}
 	}
+	
 
 	def decrypt = Action(parse.multipartFormData) { request =>
 		request.body.file("picture").map { picture =>

@@ -9,7 +9,8 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     jdbc,
-    anorm
+    anorm,
+    "org.scalaz" %% "scalaz-core" % "7.0.3"
   )
 
 
