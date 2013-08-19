@@ -1,6 +1,5 @@
 stegosaurus
 ===========
-Hide messages in images. 
 Mildly Inconvenience the NSA
 ---------------------
 
