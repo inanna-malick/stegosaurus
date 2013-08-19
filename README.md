@@ -1,8 +1,5 @@
 stegosaurus
 ===========
-Mildly Inconvenience the NSA
----------------------
-
 
 stegosaurus is a single-page web-app that simplifies the process of steganographically 
 hiding messages inside images and sharing those images via Imgur and Twitter. Users provide a message, 
